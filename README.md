@@ -1,13 +1,14 @@
 # quick-starter
 Quick starter web application with basic general requirements like routing, authentication etc.
 
-# Basic Features
+## Basic Features
 TBD
 
-# Technology
+## Technology
 TBD
 
-# Devops
+## Devops
 TBD
 
-# Development and Versioning
+## Development and Versioning
+TBD
