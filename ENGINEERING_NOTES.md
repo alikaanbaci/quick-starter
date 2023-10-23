@@ -38,6 +38,20 @@ TBD
 
 ## Indexing
 
+Database indexing verilere daha hızlı erişmek için kullanılan bir yöntemdir. Query'lerde ki conditonlardaki kolonlara göre index konularak sorguların daha hızlı cevap dönmesi sağlanır.
+
+Peki tablolara index koyduğumuzda veri tabanı nasıl daha hızlı cevap döner, index yapısı nasıl çalışır?
+
+Where conditionlı sorgular attığımızda tablolarda ki satırlar condition'larda ki kolonlara göre sıralı olmadığı için veritabanı aradğımız conditionlara göre bütün tabloyu scan eder ve cevap döner.
+
+Biz conditionlarımıza göre index koyduğumuzda veritabanının yaptı şey aslında index konulan kolonlara göre bir veri yapısı oluşturarak sıralı bir şekilde veri yapısını tutmaktadır. Bu veri yapısı genellikle B-Tree ve onun türevleridir. Veritabanına index'lenmiş kolonlar üzerine bir sorgu geldiği zaman veri tabanı table üzerinde değil bu veri yapısı üzerinde scan yaparak dönmesi gereken satırları bulur. Bu veri yapısında her bir satırın adreside tutulduğu için direk O(1) karmaşıklığı ile datayı bulur ve satırdaki diğer kolonların bilgisini de döner.
+
+Index oluşturmanın dezavantajına gelirsek write operasyonu yaparken hem bu veri yapısnı update edeceği hemde tabloya yazacağı için write operasyonuna ekstra bir yük getirir.
+
+Buna ek olarak bir normal tablo'ya ek olarak birde veri yapısını diske yazdığı için ekstra bir disk maliyeti de getirir.
+
+## Replication
+
 TBD
 
 ## Partioning
@@ -45,10 +59,6 @@ TBD
 TBD
 
 ## Sharding
-
-TBD
-
-## Replication
 
 TBD
 
