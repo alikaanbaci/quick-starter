@@ -64,9 +64,13 @@ Fakat slave database'lerden acknowledgement bekleyeceği için yazma işleminde 
 
 Yada ack beklemeden direk cevap dönebilir bu şekilde yazma işleminde bir gecikme olmamakla beraber eğer slave'lerden birinde bir down yada sorun olma durumunda inconsitent state'ler olma durumu oluşabilir.
 
-## Partioning
+## Partitioning
 
-TBD
+Veritabanında ki tablolar çok fazla büyüdüğü zaman yapılacak iyileştirmelerden bir tanesi de partitioning yapmaktır. Partitioningi iki şekilde yapabiliriz.
+
+Birtanesi tabloları one to one ilişki ile mantıksal olarak ayrı tablolara bölmek. Çok sık ihtiyaç olan kolonları uygulamadaki iş modeli mantığı çerçevesinde bir tabloda tutup diğer kolonları farklı bir tabloya alabiliriz.
+
+Bir diğer yöntem direk bir partition key belirleyip tabloyu eşit parçalara bölmek.Veritabanı bu şekilde tablodadaki dataları farklı file'lara yazar bu da scan edilecek datasetini azaltır. Buna örnek olarak üzerinde ay bilgisi olan bir kolon içeren bir tabloyu 12 parçaya bölebiliriiz. Ay conditionı içeren bir sorgu geldiğinde veritabanı bütün ayları içeren bir dataseti üzerinde scan etmek yerine sadece condition'da ki ayı içeren dataseti scan eder. Bu şekilde veritabanının scan ettiği data hacmini azaltmış oluruz.
 
 ## Sharding
 
@@ -84,7 +88,7 @@ TBD
   * Redis persistence modes
   * Why redis is so fast?
 
-# Queue & Communication Betwwen Services
+# Queue & Communication Between Services
 
 * Kafka
   * How kafka works?
