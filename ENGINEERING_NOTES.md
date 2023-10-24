@@ -44,7 +44,7 @@ Peki tablolara index koyduğumuzda veri tabanı nasıl daha hızlı cevap döner
 
 Where conditionlı sorgular attığımızda tablolarda ki satırlar condition'larda ki kolonlara göre sıralı olmadığı için veritabanı aradğımız conditionlara göre bütün tabloyu scan eder ve cevap döner.
 
-Biz conditionlarımıza göre index koyduğumuzda veritabanının yaptı şey aslında index konulan kolonlara göre bir veri yapısı oluşturarak sıralı bir şekilde veri yapısını tutmaktadır. Bu veri yapısı genellikle B-Tree ve onun türevleridir. Veritabanına index'lenmiş kolonlar üzerine bir sorgu geldiği zaman veri tabanı table üzerinde değil bu veri yapısı üzerinde scan yaparak dönmesi gereken satırları bulur. Bu veri yapısında her bir satırın adreside tutulduğu için direk O(1) karmaşıklığı ile datayı bulur ve satırdaki diğer kolonların bilgisini de döner.
+Biz conditionlarımıza göre index koyduğumuzda veritabanının yaptığı şey aslında index konulan kolonlara göre bir veri yapısı oluşturarak sıralı bir şekilde veri yapısını tutmaktadır. Bu veri yapısı genellikle B-Tree ve onun türevleridir. Veritabanına index'lenmiş kolonlar üzerine bir sorgu geldiği zaman veri tabanı table üzerinde değil bu veri yapısı üzerinde scan yaparak dönmesi gereken satırları bulur. Bu veri yapısında her bir satırın adreside tutulduğu için direk O(1) karmaşıklığı ile datayı bulur ve satırdaki diğer kolonların bilgisini de döner.
 
 Index oluşturmanın dezavantajına gelirsek write operasyonu yaparken hem bu veri yapısnı update edeceği hemde tabloya yazacağı için write operasyonuna ekstra bir yük getirir.
 
@@ -52,7 +52,17 @@ Buna ek olarak bir normal tablo'ya ek olarak birde veri yapısını diske yazdı
 
 ## Replication
 
-TBD
+Veritabanına gelen okuma yazma istekleri artık veritabanı sunucusunun kaldıramadığı bir noktaya ulaştığında veritabanını replicate ederek scale edebiliriz bu şekilde veritabanına gelen yükü başka sunuculara dağıtabiliriz.
+
+Master-Slave replication stratejisi ile veritabanını birden fazla sunucuya kopyalabilir bir instance'ı master yapıp okuma ve yazma isteklerini master'a yönlendirebiliriz. Diğer instance'ları da slave yapıp okuma isteklerini de slave instance'lara yönlendirebiliriliz.
+
+Bu şekilde okuma isteklerini farklı sunuculara dağıtmış oluruz.
+
+Burada dikkat edilmesi gereken şey master'a bir yazma işlemi geldiğinde diğer slave'lere yazdığından emin olmasını istersek, slave'lere yazdığına dair acknowledge aldıktan sonra transaction'ı tamamlamasını sağlamak. Bu şekilde instance'lar arası inconsistent state'ler oluşmasını engellemiş oluruz. 
+
+Fakat slave database'lerden acknowledgement bekleyeceği için yazma işleminde gecikmelere neden olabilir.
+
+Yada ack beklemeden direk cevap dönebilir bu şekilde yazma işleminde bir gecikme olmamakla beraber eğer slave'lerden birinde bir down yada sorun olma durumunda inconsitent state'ler olma durumu oluşabilir.
 
 ## Partioning
 
