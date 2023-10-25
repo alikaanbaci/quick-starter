@@ -74,7 +74,15 @@ Bir diğer yöntem direk bir partition key belirleyip tabloyu eşit parçalara b
 
 ## Sharding
 
-TBD
+Nosql database'lerde eğer database sunucunu işlem yükünü kaldıramayacak noktaya geldiğinde ve datasetiniz çok büyüdüğünde yapılabilecek iyileştirmelerden bir tanesi de sharding yöntemidir.
+
+Sharding ile yapılan şey aslında datasetini belirli kurallar çerçevesinde başka sunuculara dağıtmaktır. Mongodb özelinde örneklendirirsek bir document tipini bir sharding key belirleyerek farkı sunuculara dağıtabiliriz.
+
+Diyelim ki books adında bir döküman tipi var ve biz sorgularımızda kitaplara erişmek için yazar isimlerini kullanıyoruz. Yazar isimlerine göre datayı shardlayıp başka sunuculara dağıtabiliriz.
+
+Eğer mongodb ye bu shard key ile ilgili bir query geldiği zaman verinin hangi sunucuda olduğunu bildiği için o sunucuya yönlendirecek ve bütün datasetini scan etmek yerine sadece o sunucuda ki dataseti ni scan edip sonucu döndürecektir.
+
+Buda sorgularda ki latency problemini iyileştirecektir.
 
 ## Sql Tuning
 
