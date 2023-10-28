@@ -1,3 +1,5 @@
+
+
 # Database & Storage Systems
 
 ## Relational Database
@@ -340,9 +342,66 @@ void runTest() {
 }
 ```
 
-Decorator
+### Strategy
 
-Strategy
+```java
+interface TradingStrategy {
+
+  String execute();
+}
+```
+
+```java
+class BullishStrategy implements TradingStrategy {
+
+  @Override
+  public String execute() {
+    return "Bullish strategy executing";
+  }
+}
+```
+
+```java
+class BearishStrategy implements TradingStrategy {
+
+  @Override
+  public String execute() {
+    return "Bearish strategy executing";
+  }
+}
+```
+
+```java
+@AllArgsConstructor
+class TradeExecutor {
+
+  private TradingStrategy tradingStrategy;
+
+  void changeStrategy(TradingStrategy tradingStrategy) {
+    this.tradingStrategy = tradingStrategy;
+  }
+
+  public String trade() {
+    return tradingStrategy.execute();
+  }
+}	
+```
+
+```java
+@Test
+void runTest() {
+  // Prepare
+  final TradeExecutor tradeExecutor = new TradeExecutor(new BullishStrategy());
+  var bullishTrading = tradeExecutor.trade();
+  tradeExecutor.changeStrategy(new BearishStrategy());
+  var bearishTrading = tradeExecutor.trade();
+  // Verify
+  assertThat(bullishTrading).isEqualTo("Bullish strategy executing");
+  assertThat(bearishTrading).isEqualTo("Bearish strategy executing");
+}
+```
+
+Decorator
 
 Singleton
 
