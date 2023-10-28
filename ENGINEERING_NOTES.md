@@ -153,31 +153,31 @@ Yukarıda ki örnekte Vehicle bir sealed class ve sadece Car ve Truck tarafında
 Records aslında javada data içeren pojo class'larındaki kod kalabalıklarını azaltmaya yarıyor. Getter, setter, constructor, equals, hashCode gibi metodlar ve field definitionlar otomatik olarak eklenmiş oluyorlar.
 
 ```java
-    @Test
-    void givenAccounts_whenAccountsAreDifferent_shouldNotEquals() {
-        // prepare
-        record Account(String accountId, String accountOwner) {}
-        final Account kaanAccount = new Account("1", "Kaan");
-        final Account emreAccount = new Account("2", "Emre");
-        // verify
-        assertThat(kaanAccount).isNotEqualTo(emreAccount);
-        assertThat(kaanAccount.equals(emreAccount)).isFalse();
-        assertThat(Objects.equals(kaanAccount, emreAccount)).isFalse();
-    }
+@Test
+void givenAccounts_whenAccountsAreDifferent_shouldNotEquals() {
+  // prepare
+  record Account(String accountId, String accountOwner) {}
+  final Account kaanAccount = new Account("1", "Kaan");
+  final Account emreAccount = new Account("2", "Emre");
+  // verify
+  assertThat(kaanAccount).isNotEqualTo(emreAccount);
+  assertThat(kaanAccount.equals(emreAccount)).isFalse();
+  assertThat(Objects.equals(kaanAccount, emreAccount)).isFalse();
+}
 ```
 
 ```java
-    @Test
-    void givenAccounts_whenAccountsAreSame_shouldEquals() {
-        // prepare
-        record Account(String accountId, String accountOwner) {}
-        final Account kaanAccount = new Account("1", "Kaan");
-        final Account kaanBackupAccount = new Account("1", "Kaan");
-        // verify
-        assertThat(kaanAccount).isEqualTo(kaanBackupAccount);
-        assertThat(kaanAccount.equals(kaanBackupAccount)).isTrue();
-        assertThat(Objects.equals(kaanAccount, kaanBackupAccount)).isTrue();
-    }
+@Test
+void givenAccounts_whenAccountsAreSame_shouldEquals() {
+  // prepare
+  record Account(String accountId, String accountOwner) {}
+  final Account kaanAccount = new Account("1", "Kaan");
+  final Account kaanBackupAccount = new Account("1", "Kaan");
+  // verify
+  assertThat(kaanAccount).isEqualTo(kaanBackupAccount);
+  assertThat(kaanAccount.equals(kaanBackupAccount)).isTrue();
+  assertThat(Objects.equals(kaanAccount, kaanBackupAccount)).isTrue();
+}
 ```
 
 ### More Declarative NullPointerException
@@ -185,15 +185,15 @@ Records aslında javada data içeren pojo class'larındaki kod kalabalıkların�
 Önceden npe mesajlarında hangi satırda npe aldığı yazardı ama tam olarak hangi parametrenin null olduğunu yazmazken artık hangi parametrenin null olduğu exception mesajında belirtiliyor.
 
 ```java
-    @Test
-    void givenParameter_whenParameterIsNull_shouldGiveDeclarativeMessage() {
-        // prepare
-        final Integer num = null;
-        final Exception error = catchException(() -> num.doubleValue());
-        // verify
-        assertThat(error).isInstanceOf(NullPointerException.class);
-        assertThat(error.getMessage()).contains("\"num\" is null");
-    }
+@Test
+void givenParameter_whenParameterIsNull_shouldGiveDeclarativeMessage() {
+  // prepare
+  final Integer num = null;
+  final Exception error = catchException(() -> num.doubleValue());
+  // verify
+  assertThat(error).isInstanceOf(NullPointerException.class);
+  assertThat(error.getMessage()).contains("\"num\" is null");
+}
 ```
 
 ### No Need to Cast with InstanceOf
@@ -211,6 +211,140 @@ if (obj instanceof String s) {
     System.out.println(s.contains("hello"));
 }
 ```
+
+## Known Design Patterns
+
+### Proxy
+
+Bir class'ın bir methoduna metod çalışmadan önce yada çalıştıktan sonra ek operasyonlar yapmasını sağlamaya yarar.
+
+```java
+interface HttpHandler {
+  
+  String handleRequest();
+}
+```
+
+```java
+class HttpHandlerImpl implements HttpHandler {
+  
+  @Override
+  public String handleRequest() {
+    return "Success";
+  }
+}
+```
+
+```java
+class HttpHandlerPoxy implements HttpHandler {
+
+  private final HttpHandler httpHandler;
+
+  public HttpHandlerPoxy(HttpHandler proxy) {
+    this.httpHandler = proxy;
+  }
+
+  @Override
+  public String handleRequest() {
+    return httpHandler.handleRequest() + " 200";
+  }
+}
+```
+
+```java
+@Test
+void runTest() {
+  // Prepare
+  var handler = new HttpHandlerImpl();
+  var proxy = new HttpHandlerPoxy(handler);
+  // Execute
+  final String response = handler.handleRequest();
+  final String responseWithCode = proxy.handleRequest();
+  // Verify
+  assertThat(response).isEqualTo("Success");
+  assertThat(responseWithCode).isEqualTo("Success 200");
+}
+```
+
+### Factory
+
+```java
+interface Assigner {
+
+  String assign();
+}
+```
+
+```java
+class IndividualAssigner implements Assigner {
+
+  @Override
+  public String assign() {
+    return "Assign to individual";
+  }
+}
+```
+
+```java
+class TeamAssigner implements Assigner {
+
+  @Override
+  public String assign() {
+    return "Assign to team";
+  }
+}
+```
+
+```java
+class WorkGroupAssigner implements Assigner {
+
+  @Override
+  public String assign() {
+    return "Assign to work group";
+  }
+}
+```
+
+```java
+enum AssignmentType {
+  INDIVIDUAL,
+  TEAM,
+  WORK_GROUP
+}
+```
+
+```java
+class AssignerFactory {
+  Assigner getAssigner(AssignmentType assignmentType) {
+    return switch (assignmentType) {
+      case INDIVIDUAL -> new IndividualAssigner();
+      case TEAM -> new TeamAssigner();
+      case WORK_GROUP -> new WorkGroupAssigner();
+    };
+  }
+}
+```
+
+```java
+@Test
+void runTest() {
+  // Prepare
+  AssignerFactory assignerFactory = new AssignerFactory();
+  var indAssigner = assignerFactory.getAssigner(AssignmentType.INDIVIDUAL);
+  var teamAssigner = assignerFactory.getAssigner(AssignmentType.TEAM);
+  var workGroupAssigner = assignerFactory.getAssigner(AssignmentType.WORK_GROUP);
+  // Verify
+  assertThat(indAssigner.assign()).isEqualTo("Assign to individual");
+  assertThat(teamAssigner.assign()).isEqualTo("Assign to team");
+  assertThat(workGroupAssigner.assign()).isEqualTo("Assign to work group");
+}
+```
+
+Decorator
+
+Strategy
+
+Singleton
 
 ## Relation between JVM - JDK - JRE
 
