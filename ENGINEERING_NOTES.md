@@ -154,15 +154,16 @@ Records aslında javada data içeren pojo class'larındaki kod kalabalıkların�
 
 ```java
     @Test
-    void givenAccounts_whenAccountsAreSame_shouldEquals() {
+    void givenAccounts_whenAccountsAreDifferent_shouldNotEquals() {
         // prepare
         record Account(String accountId, String accountOwner) {}
+
         final Account kaanAccount = new Account("1", "Kaan");
-        final Account kaanBackupAccount = new Account("1", "Kaan");
+        final Account emreAccount = new Account("2", "Emre");
         // verify
-        assertThat(kaanAccount).isEqualTo(kaanBackupAccount);
-        assertThat(kaanAccount.equals(kaanBackupAccount)).isTrue();
-        assertThat(Objects.equals(kaanAccount, kaanBackupAccount)).isTrue();
+        assertThat(kaanAccount).isNotEqualTo(emreAccount);
+        assertThat(kaanAccount.equals(emreAccount)).isFalse();
+        assertThat(Objects.equals(kaanAccount, emreAccount)).isFalse();
     }
 ```
 
