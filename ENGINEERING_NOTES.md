@@ -126,15 +126,98 @@ TBD
 * Spring IoC structure
 * Spring beans lifesycles
 * Dependency Injection
+* Springte kullanılan design pattern'lar
 
 # Java
 
-- Java17 new features
-- JVM - JRE - JDK
-- Java memory areas
-  - Heap Memory
-  - Stack Memory
-  - Program Counter
-  - Class Area
+## Java 17 Features
+
+### Sealed Classes
+
+Sealed class'lar aslında bir base class'ın hangi class'lar tarafından extend edilebileceğini kısıtlamaya yarıyorlar.
+
+```java
+sealed class Vehicle permits Car, Truck { }
+
+final class Car extends Vehicle { }
+
+final class Truck extends Vehicle { }
+
+final class Bicycle extends Vehicle { }
+```
+
+Yukarıda ki örnekte Vehicle bir sealed class ve sadece Car ve Truck tarafından extend edilebileceği belirtilmiş. En alttaki Bicycle classını Vehicle'dan extend etmek istediğimiz zaman kod hata verecektir. 
+
+### Records
+
+Records aslında javada data içeren pojo class'larındaki kod kalabalıklarını azaltmaya yarıyor. Getter, setter, constructor, equals, hashCode gibi metodlar ve field definitionlar otomatik olarak eklenmiş oluyorlar.
+
+```java
+    @Test
+    void givenAccounts_whenAccountsAreSame_shouldEquals() {
+        // prepare
+        record Account(String accountId, String accountOwner) {}
+        final Account kaanAccount = new Account("1", "Kaan");
+        final Account kaanBackupAccount = new Account("1", "Kaan");
+        // verify
+        assertThat(kaanAccount).isEqualTo(kaanBackupAccount);
+        assertThat(kaanAccount.equals(kaanBackupAccount)).isTrue();
+        assertThat(Objects.equals(kaanAccount, kaanBackupAccount)).isTrue();
+    }
+```
+
+```java
+    @Test
+    void givenAccounts_whenAccountsAreSame_shouldEquals() {
+        // prepare
+        record Account(String accountId, String accountOwner) {}
+        final Account kaanAccount = new Account("1", "Kaan");
+        final Account kaanBackupAccount = new Account("1", "Kaan");
+        // verify
+        assertThat(kaanAccount).isEqualTo(kaanBackupAccount);
+        assertThat(kaanAccount.equals(kaanBackupAccount)).isTrue();
+        assertThat(Objects.equals(kaanAccount, kaanBackupAccount)).isTrue();
+    }
+```
+
+### More Declarative NullPointerException
+
+Önceden npe mesajlarında hangi satırda npe aldığı yazardı ama tam olarak hangi parametrenin null olduğunu yazmazken artık hangi parametrenin null olduğu exception mesajında belirtiliyor.
+
+```java
+    @Test
+    void givenParameter_whenParameterIsNull_shouldGiveDeclarativeMessage() {
+        // prepare
+        final Integer num = null;
+        final Exception error = catchException(() -> num.doubleValue());
+        // verify
+        assertThat(error).isInstanceOf(NullPointerException.class);
+        assertThat(error.getMessage()).contains("\"num\" is null");
+    }
+```
+
+### No Need to Cast with InstanceOf
+
+InstanceOf ile parametrenin tipini kontrol edip sonra işlem yaparken artık cast etmeye gerek kalmadı.
+
+```java
+// Before
+if (obj instanceof String) {
+    String s = (String) obj;
+    // use s
+}
+// After
+if (obj instanceof String s) {
+    System.out.println(s.contains("hello"));
+}
+```
+
+## Relation between JVM - JDK - JRE
+
+JDK java programlama dilinde geliştirme yapabilmek için gereken her şeyi sunar.
+
+JRE java uygulamaların derleyip çalıştırmaya yarar.
+
+JVM bytecode'ları yorumlayıp üzerinde çalıştığı platforma göre makine kodlarına çevirip uygulamanın çalışmasını sağlar.
 
 # Unit & Integration Testing
