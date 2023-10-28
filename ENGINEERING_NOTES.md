@@ -157,7 +157,6 @@ Records aslında javada data içeren pojo class'larındaki kod kalabalıkların�
     void givenAccounts_whenAccountsAreDifferent_shouldNotEquals() {
         // prepare
         record Account(String accountId, String accountOwner) {}
-
         final Account kaanAccount = new Account("1", "Kaan");
         final Account emreAccount = new Account("2", "Emre");
         // verify
