@@ -100,14 +100,23 @@ TBD
 
 # Queue & Communication Between Services
 
-* Kafka
-  * How kafka works?
-* RabbitMq
-* Http service call between services
-  * Retry
-  * Backoff Duration
-* Load Balancing
-* Throtling or Rate Limiting
+## Queue vs HTTP
+
+TBD
+
+## Kafka
+
+Kafka çok büyük yük trafiği altında çalışabilen bir event streaming plaformudur. Distributed bir şekilde çalışabilidiği için çok yoğun trafik altında çalışabilir. Producer'lar eventleri topiclere yazarlar. Consumer'larda topiclerden verileri okurlar. Topicler partitionlanarak farklı sunuculara(broker) dağıtılabilirler. Bu şekilde distributed şekilde çalışmış olurlar. 
+
+Partitionlar replicate edilebilirler. Bu şekilde her hangi bir partition'ın down olması durumunda diğer replika devreye girerek çalışmaya devam eder.
+
+Streaming özelliği vardır. Topiclerde ki eventleri filtereleme yada dönüştürme işlemşeri yapabilirsin.
+
+Gelen recordları diske yazdığı için record'lar herhangi bir durumda kaybolmazlar. Bu özelliği ile data analytics gibi işlerin kullanımı içinde uygun.
+
+## Kafka vs Queue
+
+TBD
 
 # Microservice & Microservice Design Patterns
 
