@@ -92,11 +92,15 @@ TBD
 
 # Cache
 
-* Distrubuted Caching
-* CDN
-* Redis
-  * Redis persistence modes
-  * Why redis is so fast?
+Cache yapıları çok hızlı çalışan data storage mekanizmalarıdır. Genellikle disk değil in memory çalıştıkları için hızlılardır. Uygulamanın gecikme sürelerini düşürmek, veri tabanı üzerinde ki yükü azaltmak için kullanılırlar.
+
+Cache yazma tekniği olarak on demand caching yöntemi bir okuma isteği geldiğinde ilk önce cache bakılıp eğer cachete te yoksa db den okuyup cache e yazıp sonra datayı dönmektir.  Bu şekilde bir sonra ki okuma isteği db yerine cache ten okuyacaktır.
+
+Bir diğer cache yöntemi de önceden cache i doldurmaktır. Bir read isteğinin gelebileceğini bildiğimiz durumlarda cache i önceden doldurarak okuma isteğinin cache ten yapılmasını sağlayabiliriz.
+
+Cache deki dataların zaman içinde state'lerinin eski kalmasını engellemek için ttl süresi vererek belirli bir zaman içinde silinmelerini sağlamak gerekir. Yada veritabanında bir değişiklik olduğu zaman yine cache silerek bu datayı invalidate ederek statelerin db ile senkron olması sağlanabilir.
+
+ResultSet Caching de çok uzun süren db sorgularını direk cachete tutarak veritabanındansa cacheten okunmasıdır. 
 
 # Queue & Communication Between Services
 
