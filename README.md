@@ -145,6 +145,18 @@ TBD
 
 # Java
 
+## Solid
+
+Single Responsibility: Kodlarda ki her bir birimin sadece bir tek görevi olması gerekir.
+
+Open/Closed: Yazılımda ki birimler değişime kapalı, gelişime açık olmalıdır. 
+
+Liskov Subsitution: Alt sınıflar, üst sınıfların yerine kullanılabilir olmalıdır.
+
+Interface Segregation: Bir interface'i implement eden bir class, interface'deki bütün metodları implement edebilmelidir.
+
+Dependency Inversion: Class'lar birbirlerini kullanırken interface'ler üzerinden kullanmalıdır.
+
 ## Java 17 Features
 
 ### Sealed Classes
