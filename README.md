@@ -439,3 +439,5 @@ JRE java uygulamaların derleyip çalıştırmaya yarar.
 JVM bytecode'ları yorumlayıp üzerinde çalıştığı platforma göre makine kodlarına çevirip uygulamanın çalışmasını sağlar.
 
 # Unit & Integration Testing
+
+TBD
